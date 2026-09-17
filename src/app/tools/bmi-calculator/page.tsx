@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolLayout from "@/components/ToolLayout";
+import { recordToolHistory } from "@/lib/tool-history";
 
 export default function BMICalculatorPage() {
   const [height, setHeight] = useState("");
@@ -42,6 +43,12 @@ export default function BMICalculatorPage() {
     } else {
       setCategory("Obesity — স্থূলতা");
     }
+
+    void recordToolHistory({
+      tool_name: "BMI Calculator",
+      input: `Height: ${height} cm, Weight: ${weight} kg`,
+      output: `BMI: ${bmi.toFixed(1)}`,
+    });
   };
 
   const clearAll = () => {

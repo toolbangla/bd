@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolLayout from "@/components/ToolLayout";
+import { recordToolHistory } from "@/lib/tool-history";
 
 export default function ImageResizerPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -101,6 +102,11 @@ export default function ImageResizerPage() {
 
           setResizedUrl(url);
           setIsResizing(false);
+          void recordToolHistory({
+            tool_name: "Image Resizer",
+            input: `${file.name}, ${originalWidth} × ${originalHeight}px`,
+            output: `${newWidth} × ${newHeight}px`,
+          });
           URL.revokeObjectURL(imageUrl);
         },
         outputType,

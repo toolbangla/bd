@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolLayout from "@/components/ToolLayout";
+import { recordToolHistory } from "@/lib/tool-history";
 
 export default function PngToJpgPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -63,6 +64,11 @@ export default function PngToJpgPage() {
 
           setConvertedUrl(URL.createObjectURL(blob));
           setIsConverting(false);
+          void recordToolHistory({
+            tool_name: "PNG to JPG",
+            input: file.name,
+            output: "JPG image created",
+          });
           URL.revokeObjectURL(imageUrl);
         },
         "image/jpeg",

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import jsPDF from "jspdf";
 import ToolLayout from "@/components/ToolLayout";
+import { recordToolHistory } from "@/lib/tool-history";
 
 export default function ImageToPdfPage() {
   const [files, setFiles] = useState<File[]>([]);
@@ -88,6 +89,11 @@ export default function ImageToPdfPage() {
       }
 
       pdf.save("toolbangla-image-to-pdf.pdf");
+      void recordToolHistory({
+        tool_name: "Image to PDF",
+        input: `${files.length} image file(s): ${files.map((file) => file.name).join(", ")}`,
+        output: "toolbangla-image-to-pdf.pdf",
+      });
     } catch (error) {
       console.error(error);
       alert("PDF তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");

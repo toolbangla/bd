@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolLayout from "@/components/ToolLayout";
+import { recordToolHistory } from "@/lib/tool-history";
 
 export default function AgeCalculatorPage() {
   const [birthDate, setBirthDate] = useState("");
@@ -50,6 +51,12 @@ export default function AgeCalculatorPage() {
       years,
       months,
       days,
+    });
+
+    void recordToolHistory({
+      tool_name: "Age Calculator",
+      input: `Birth date: ${birthDate}`,
+      output: `${years} years, ${months} months, ${days} days`,
     });
   };
 

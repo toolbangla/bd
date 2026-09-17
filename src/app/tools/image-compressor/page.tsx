@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolLayout from "@/components/ToolLayout";
+import { recordToolHistory } from "@/lib/tool-history";
 
 export default function ImageCompressorPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -58,6 +59,12 @@ export default function ImageCompressorPage() {
           setCompressedUrl(url);
           setCompressedSize(blob.size);
           setIsCompressing(false);
+
+          void recordToolHistory({
+            tool_name: "Image Compressor",
+            input: `${file.name}, ${formatSize(file.size)}, quality ${quality}%`,
+            output: `Compressed size: ${formatSize(blob.size)}`,
+          });
         },
         "image/jpeg",
         quality / 100

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolLayout from "@/components/ToolLayout";
+import { recordToolHistory } from "@/lib/tool-history";
 
 export default function PercentageCalculatorPage() {
   const [number, setNumber] = useState("");
@@ -22,7 +23,14 @@ export default function PercentageCalculatorPage() {
       return;
     }
 
-    setResult((value * percent) / 100);
+    const calculatedResult = (value * percent) / 100;
+    setResult(calculatedResult);
+
+    void recordToolHistory({
+      tool_name: "Percentage Calculator",
+      input: `${number} × ${percentage}%`,
+      output: String(calculatedResult),
+    });
   };
 
   const clearAll = () => {

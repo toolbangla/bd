@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import ToolLayout from "@/components/ToolLayout";
+import { recordToolHistory } from "@/lib/tool-history";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
@@ -111,6 +112,11 @@ export default function PdfToImagePage() {
       }
 
       setPages(convertedPages);
+      void recordToolHistory({
+        tool_name: "PDF to Image",
+        input: file.name,
+        output: `${convertedPages.length} PNG image(s) created`,
+      });
     } catch (error) {
       console.error(error);
       alert(
