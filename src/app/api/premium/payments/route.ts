@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPremiumProduct, getPackagePrice, getPackageUses, type PremiumPackage } from "@/lib/premium-pricing";
+import { getPremiumProduct, getPackageUses, type PremiumPackage } from "@/lib/premium-pricing";
 import { getPaymentProvider, type PaymentProvider } from "@/lib/payments/payment-service";
 import { getServerSupabaseClient } from "@/lib/payments/server-supabase";
 
@@ -19,8 +19,9 @@ export async function POST(request: NextRequest) {
   }
 
   const product = getPremiumProduct(body.toolId);
-  const amount = product ? getPackagePrice(product, body.packageName) : null;
-  if (!product || amount === null) {
+  const { data: pricing, error: pricingError } = await supabase.from("premium_pricing").select("single_use_price, five_use_price").eq("id", 1).single();
+  const amount = body.packageName === "five" ? pricing?.five_use_price : pricing?.single_use_price;
+  if (!product || pricingError || amount === null || amount === undefined) {
     return NextResponse.json({ status: "configuration_required", message: "Premium pricing or payment integration pending configuration." }, { status: 503 });
   }
 

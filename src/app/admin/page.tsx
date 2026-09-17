@@ -6,6 +6,7 @@ import ToolLayout from "@/components/ToolLayout";
 import { ADMIN_EMAIL, isAdminEmail } from "@/lib/admin";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { getToolHistory } from "@/lib/tool-history";
+import AdminPremiumPricing from "@/components/AdminPremiumPricing";
 
 type ContactMessage = {
   id: string;
@@ -263,6 +264,8 @@ export default function AdminPage() {
                   <p className="mt-2 text-3xl font-bold">{historyCount ?? "—"}</p>
                 </div>
               </div>
+
+              <AdminPremiumPricing />
 
               <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
                 <h2 className="text-2xl font-bold">Logo Management</h2>
