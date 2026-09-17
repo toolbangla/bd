@@ -21,6 +21,8 @@ export default function AdminPage() {
   const router = useRouter();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [logoUrl, setLogoUrl] = useState("");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState("");
   const [historyCount, setHistoryCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [savingLogo, setSavingLogo] = useState(false);
@@ -117,6 +119,72 @@ export default function AdminPage() {
     setNotice("Logo settings saved. Refresh public pages to see the updated logo.");
   };
 
+  const handleLogoFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setErrorMessage("Unsupported logo type. Choose a PNG, JPG, WEBP, or SVG image.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMessage("Logo file is too large. Choose an image smaller than 5 MB.");
+      return;
+    }
+
+    setLogoFile(file);
+    setLogoPreview(URL.createObjectURL(file));
+    setErrorMessage("");
+    setNotice("");
+  };
+
+  const uploadLogo = async () => {
+    if (!logoFile) {
+      setErrorMessage("Choose a logo file first.");
+      return;
+    }
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setErrorMessage("Supabase is not configured. Check the public environment variables.");
+      return;
+    }
+
+    setSavingLogo(true);
+    setErrorMessage("");
+    setNotice("");
+
+    const safeName = logoFile.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+    const path = `logos/${Date.now()}-${safeName}`;
+    const { error: uploadError } = await supabase.storage.from("site-assets").upload(path, logoFile, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: logoFile.type,
+    });
+
+    if (uploadError) {
+      setSavingLogo(false);
+      setErrorMessage(`Logo upload failed: ${uploadError.message}`);
+      return;
+    }
+
+    const { data } = supabase.storage.from("site-assets").getPublicUrl(path);
+    const { error: settingsError } = await supabase
+      .from("site_settings")
+      .update({ logo_url: data.publicUrl, updated_at: new Date().toISOString() })
+      .eq("id", 1);
+
+    setSavingLogo(false);
+    if (settingsError) {
+      setErrorMessage(`Logo uploaded but settings could not be saved: ${settingsError.message}`);
+      return;
+    }
+
+    setLogoUrl(data.publicUrl);
+    setLogoPreview(data.publicUrl);
+    setNotice("Logo uploaded and saved successfully.");
+  };
+
   const signOut = async () => {
     const supabase = getSupabaseBrowserClient();
     await supabase?.auth.signOut();
@@ -158,8 +226,14 @@ export default function AdminPage() {
 
               <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
                 <h2 className="text-2xl font-bold">Logo Management</h2>
-                <p className="mt-2 text-sm text-slate-600">Save a public image URL from your existing asset storage.</p>
-                {logoUrl && <img src={logoUrl} alt="Current ToolBangla logo" className="mt-5 h-16 w-auto max-w-full object-contain" />}
+                <p className="mt-2 text-sm text-slate-600">Upload a logo file or save an external image URL.</p>
+                {(logoPreview || logoUrl) && <img src={logoPreview || logoUrl} alt="Current ToolBangla logo" className="mt-5 h-20 w-auto max-w-full object-contain" />}
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={handleLogoFile} className="min-w-0 flex-1 rounded-xl border border-slate-200 p-3 text-sm" />
+                  <button type="button" onClick={() => void uploadLogo()} disabled={savingLogo || !logoFile} className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+                    {savingLogo ? "Uploading..." : "Upload Logo"}
+                  </button>
+                </div>
                 <form className="mt-5 flex flex-col gap-3 sm:flex-row" onSubmit={saveLogo}>
                   <input
                     type="url"

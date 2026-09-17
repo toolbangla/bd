@@ -75,7 +75,7 @@ export default function ContactPage() {
       console.error("Contact submission failed:", error);
       setStatus({
         type: "error",
-        message: "Your message could not be sent. Please try again.",
+        message: "Your message could not be sent. Please try again or contact us later.",
       });
       return;
     }
