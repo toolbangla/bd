@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [logoUrl, setLogoUrl] = useState("");
+  const pathname = usePathname();
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -30,9 +32,20 @@ export default function Header() {
     { href: "/", label: "Home" },
     { href: "/tools", label: "Tools" },
     { href: "/tools", label: "Products" },
+    { href: "/tools/qr-code-generator", label: "QR Code Generator" },
     { href: "/history", label: "History" },
     { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+    { href: "/admin", label: "Admin Panel" },
   ];
+
+  const isActive = (href: string, label: string) => {
+    if (label === "Products") return false;
+    if (href === "/") return pathname === "/";
+    if (label === "QR Code Generator") return pathname === href;
+    if (href === "/tools") return pathname === "/tools" || pathname.startsWith("/tools/") && !pathname.startsWith("/tools/qr-code-generator");
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
@@ -54,25 +67,16 @@ export default function Header() {
             <Link
               key={`${item.href}-${item.label}`}
               href={item.href}
-              className="font-medium text-slate-700 transition hover:text-blue-600"
+              aria-current={isActive(item.href, item.label) ? "page" : undefined}
+              className={`rounded-lg border px-2 py-1 font-medium transition hover:text-blue-600 ${
+                isActive(item.href, item.label)
+                  ? "border-red-500 bg-red-50 text-red-700"
+                  : "border-transparent text-slate-700"
+              }`}
             >
               {item.label}
             </Link>
           ))}
-
-          <Link
-            href="/contact"
-            className="rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white transition hover:bg-blue-700"
-          >
-            Contact
-          </Link>
-
-          <Link
-            href="/admin"
-            className="font-medium text-slate-700 transition hover:text-blue-600"
-          >
-            Admin Panel
-          </Link>
         </nav>
 
         {/* Mobile Button */}
@@ -96,27 +100,16 @@ export default function Header() {
                 key={`${item.href}-${item.label}`}
                 href={item.href}
                 onClick={closeMenu}
-                className="border-b border-slate-100 py-3 font-medium text-slate-700"
+                aria-current={isActive(item.href, item.label) ? "page" : undefined}
+                className={`border px-3 py-3 font-medium transition ${
+                  isActive(item.href, item.label)
+                    ? "border-red-500 bg-red-50 text-red-700"
+                    : "border-transparent text-slate-700"
+                }`}
               >
                 {item.label}
               </Link>
             ))}
-
-            <Link
-              href="/contact"
-              onClick={closeMenu}
-              className="mt-3 rounded-xl bg-blue-600 px-5 py-3 text-center font-semibold text-white"
-            >
-              Contact
-            </Link>
-
-            <Link
-              href="/admin"
-              onClick={closeMenu}
-              className="border-b border-slate-100 py-3 font-medium text-slate-700"
-            >
-              Admin Panel
-            </Link>
           </nav>
         </div>
       )}
