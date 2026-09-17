@@ -33,7 +33,7 @@ export default function Header() {
     { href: "/tools", label: "Tools" },
     { href: "/tools", label: "Products" },
     { href: "/tools/qr-code-generator", label: "QR Code Generator" },
-    { href: "/history", label: "History" },
+    { href: "/tools/text-to-voice", label: "Text to Voice" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/admin", label: "Admin Panel" },

@@ -18,6 +18,18 @@ type ContactMessage = {
   is_read: boolean;
 };
 
+type PremiumPayment = {
+  id: string;
+  user_id: string;
+  tool_id: string;
+  package_name: string;
+  payment_provider: string;
+  amount: number | null;
+  payment_status: string;
+  purchased_uses: number;
+  created_at: string;
+};
+
 export default function AdminPage() {
   const router = useRouter();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
@@ -29,6 +41,8 @@ export default function AdminPage() {
   const [savingLogo, setSavingLogo] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [notice, setNotice] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [premiumPayments, setPremiumPayments] = useState<PremiumPayment[]>([]);
 
   const loadDashboard = useCallback(async () => {
     const supabase = getSupabaseBrowserClient();
@@ -44,12 +58,13 @@ export default function AdminPage() {
       return;
     }
 
-    const [messagesResult, settingsResult] = await Promise.all([
+    const [messagesResult, settingsResult, paymentsResult] = await Promise.all([
       supabase
         .from("contact_messages")
         .select("id, name, email, phone, subject, message, created_at, is_read")
         .order("created_at", { ascending: false }),
       supabase.from("site_settings").select("logo_url").eq("id", 1).maybeSingle(),
+      supabase.from("premium_payments").select("id, user_id, tool_id, package_name, payment_provider, amount, payment_status, purchased_uses, created_at").order("created_at", { ascending: false }),
     ]);
 
     if (messagesResult.error) {
@@ -63,6 +78,8 @@ export default function AdminPage() {
     } else {
       setLogoUrl(settingsResult.data?.logo_url ?? "");
     }
+
+    if (!paymentsResult.error) setPremiumPayments((paymentsResult.data ?? []) as PremiumPayment[]);
 
     setHistoryCount((await getToolHistory()).length);
     setLoading(false);
@@ -89,6 +106,29 @@ export default function AdminPage() {
     setMessages((current) => current.map((item) => (
       item.id === message.id ? { ...item, is_read: !item.is_read } : item
     )));
+  };
+
+  const deleteMessage = async (message: ContactMessage) => {
+    if (!window.confirm(`Delete the message from ${message.name}?`)) return;
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setErrorMessage("Supabase is not configured. Check the public environment variables.");
+      return;
+    }
+
+    setDeletingId(message.id);
+    setErrorMessage("");
+    const { error } = await supabase.from("contact_messages").delete().eq("id", message.id);
+    setDeletingId(null);
+
+    if (error) {
+      setErrorMessage(`Could not delete message: ${error.message}`);
+      return;
+    }
+
+    setMessages((current) => current.filter((item) => item.id !== message.id));
+    setNotice("Message deleted successfully.");
   };
 
   const saveLogo = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -249,6 +289,15 @@ export default function AdminPage() {
               </div>
 
               <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+                <h2 className="text-2xl font-bold">Premium Payments</h2>
+                <p className="mt-2 text-sm text-slate-600">Inspection only. Payment status is changed by verified provider callbacks, never by this client.</p>
+                <div className="mt-6 space-y-3">
+                  {!premiumPayments.length && <p className="text-slate-500">No premium payment records.</p>}
+                  {premiumPayments.map((payment) => <article key={payment.id} className="rounded-xl border border-slate-200 p-4 text-sm"><p><strong>Payment:</strong> {payment.id}</p><p><strong>User:</strong> {payment.user_id}</p><p><strong>Tool:</strong> {payment.tool_id} · <strong>Package:</strong> {payment.package_name} ({payment.purchased_uses} uses)</p><p><strong>Method:</strong> {payment.payment_provider} · <strong>Amount:</strong> {payment.amount ?? "Pending"} · <strong>Status:</strong> {payment.payment_status}</p><p className="mt-1 text-xs text-slate-500">{new Date(payment.created_at).toLocaleString()}</p></article>)}
+                </div>
+              </div>
+
+              <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
                 <h2 className="text-2xl font-bold">Contact Messages</h2>
                 <div className="mt-6 space-y-4">
                   {!messages.length && <p className="text-slate-500">No messages yet.</p>}
@@ -260,9 +309,14 @@ export default function AdminPage() {
                           <p className="mt-1 text-sm text-slate-600">{message.name} · {message.email}{message.phone ? ` · ${message.phone}` : ""}</p>
                           <p className="mt-1 text-xs text-slate-500">{new Date(message.created_at).toLocaleString()}</p>
                         </div>
-                        <button type="button" onClick={() => void updateReadStatus(message)} className="self-start rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold hover:bg-slate-50">
-                          {message.is_read ? "Mark Unread" : "Mark Read"}
-                        </button>
+                        <div className="flex flex-wrap gap-2 self-start">
+                          <button type="button" onClick={() => void updateReadStatus(message)} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold hover:bg-slate-50">
+                            {message.is_read ? "Mark Unread" : "Mark Read"}
+                          </button>
+                          <button type="button" onClick={() => void deleteMessage(message)} disabled={deletingId === message.id} className="rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60">
+                            {deletingId === message.id ? "Deleting..." : "Delete"}
+                          </button>
+                        </div>
                       </div>
                       <p className="mt-4 whitespace-pre-wrap text-slate-800">{message.message}</p>
                     </article>

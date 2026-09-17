@@ -47,6 +47,7 @@ export default function ToolLayout({ children }: ToolLayoutProps) {
     "bangla-text-counter": "বাংলা Text Counter",
     "word-counter": "Word Counter",
     "character-counter": "Character Counter",
+    "text-to-voice": "Text to Voice",
   };
   const relatedTools: Record<string, { href: string; label: string }[]> = {
     "jpg-to-png": [{ href: "/tools/png-to-jpg", label: "PNG to JPG" }, { href: "/tools/image-compressor", label: "Image Compressor" }, { href: "/tools/image-converter", label: "Image Converter" }],

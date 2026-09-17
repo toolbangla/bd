@@ -2,6 +2,7 @@ import Link from "next/link";
 import ToolLayout from "@/components/ToolLayout";
 import { PremiumOnlyFeature } from "@/components/PremiumFeature";
 import { getCurrentAccessMode, PREMIUM_FEATURES } from "@/lib/premium";
+import PremiumToolAccess from "@/components/PremiumToolAccess";
 
 export const metadata = {
   title: "Premium Mode",
@@ -30,6 +31,14 @@ export default function PremiumPage() {
             {PREMIUM_FEATURES.map((feature) => (
               <PremiumOnlyFeature key={feature.id} feature={feature} />
             ))}
+          </div>
+
+          <div className="mt-8 space-y-5">
+            <h2 className="text-2xl font-bold">Premium Tool Usage</h2>
+            <p className="text-slate-600">Usage credits are per tool and are not lifetime access. Payment activation remains pending provider configuration.</p>
+            <PremiumToolAccess toolId="image-compressor" />
+            <PremiumToolAccess toolId="pdf-compressor" />
+            <PremiumToolAccess toolId="background-remover" />
           </div>
 
           <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
