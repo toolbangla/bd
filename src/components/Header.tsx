@@ -38,12 +38,14 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" onClick={closeMenu} className="text-2xl font-extrabold tracking-tight text-slate-900">
-          {logoUrl ? (
-            <img src={logoUrl} alt="ToolBangla" className="h-10 w-auto object-contain" />
-          ) : (
-            <>Tool<span className="text-blue-600">Bangla</span></>
-          )}
+        <Link
+          href="/"
+          onClick={closeMenu}
+          className="flex min-w-0 items-center gap-3 text-2xl font-extrabold tracking-tight text-slate-900"
+          aria-label="ToolBangla home"
+        >
+          {logoUrl && <img src={logoUrl} alt="" className="h-10 w-auto max-w-[9rem] object-contain" />}
+          <span className="whitespace-nowrap">Tool<span className="text-blue-600">Bangla</span></span>
         </Link>
 
         {/* Desktop Navigation */}
