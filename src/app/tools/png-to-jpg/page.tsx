@@ -65,6 +65,7 @@ export default function PngToJpgPage() {
           setConvertedUrl(URL.createObjectURL(blob));
           setIsConverting(false);
           void recordToolHistory({
+            tool_id: "png-to-jpg",
             tool_name: "PNG to JPG",
             input: file.name,
             output: "JPG image created",

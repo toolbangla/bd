@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SocialActions from "@/components/SocialActions";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -6,6 +7,10 @@ export default function Footer() {
   return (
     <footer className="mt-20 bg-slate-950 text-slate-300">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-10 border-b border-slate-800 pb-8">
+          <SocialActions />
+        </div>
+
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>

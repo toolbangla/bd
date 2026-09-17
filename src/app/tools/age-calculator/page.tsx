@@ -54,6 +54,7 @@ export default function AgeCalculatorPage() {
     });
 
     void recordToolHistory({
+      tool_id: "age-calculator",
       tool_name: "Age Calculator",
       input: `Birth date: ${birthDate}`,
       output: `${years} years, ${months} months, ${days} days`,

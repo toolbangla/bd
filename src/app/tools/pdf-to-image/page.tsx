@@ -113,6 +113,7 @@ export default function PdfToImagePage() {
 
       setPages(convertedPages);
       void recordToolHistory({
+        tool_id: "pdf-to-image",
         tool_name: "PDF to Image",
         input: file.name,
         output: `${convertedPages.length} PNG image(s) created`,

@@ -90,6 +90,7 @@ export default function ImageToPdfPage() {
 
       pdf.save("toolbangla-image-to-pdf.pdf");
       void recordToolHistory({
+        tool_id: "image-to-pdf",
         tool_name: "Image to PDF",
         input: `${files.length} image file(s): ${files.map((file) => file.name).join(", ")}`,
         output: "toolbangla-image-to-pdf.pdf",

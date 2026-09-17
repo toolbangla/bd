@@ -5,6 +5,7 @@ export const HISTORY_STORAGE_KEY = "toolbangla-history";
 export type ToolHistoryRecord = {
   id: string;
   tool_name: string;
+  tool_id?: string;
   input: string;
   output: string;
   created_at: string;
@@ -33,11 +34,12 @@ export async function recordToolHistory(record: NewHistoryRecord) {
   const user = supabase ? (await supabase.auth.getUser()).data.user : null;
 
   if (user && supabase) {
+    const { tool_name, input, output } = record;
     const { error } = await supabase.from("tool_history").insert({
       user_id: user.id,
-      tool_name: record.tool_name,
-      input: record.input,
-      output: record.output,
+      tool_name,
+      input,
+      output,
     });
 
     if (!error) notifyHistoryChanged();
@@ -99,6 +101,25 @@ export async function clearToolHistory() {
     await supabase.from("tool_history").delete().eq("user_id", user.id);
   } else {
     localStorage.removeItem(HISTORY_STORAGE_KEY);
+  }
+
+  notifyHistoryChanged();
+}
+
+export async function getToolHistoryForTool(toolName: string) {
+  const history = await getToolHistory();
+  return history.filter((record) => record.tool_name === toolName);
+}
+
+export async function clearToolHistoryForTool(toolName: string) {
+  const supabase = getSupabaseBrowserClient();
+  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
+
+  if (user && supabase) {
+    await supabase.from("tool_history").delete().eq("user_id", user.id).eq("tool_name", toolName);
+  } else {
+    const updated = getGuestHistory().filter((record) => record.tool_name !== toolName);
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(updated));
   }
 
   notifyHistoryChanged();

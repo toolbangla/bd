@@ -68,6 +68,7 @@ export default function JpgToPngPage() {
         setIsConverting(false);
 
         void recordToolHistory({
+          tool_id: "jpg-to-png",
           tool_name: "JPG to PNG",
           input: file.name,
           output: "PNG image created",

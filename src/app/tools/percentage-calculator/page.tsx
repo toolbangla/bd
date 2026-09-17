@@ -27,6 +27,7 @@ export default function PercentageCalculatorPage() {
     setResult(calculatedResult);
 
     void recordToolHistory({
+      tool_id: "percentage-calculator",
       tool_name: "Percentage Calculator",
       input: `${number} × ${percentage}%`,
       output: String(calculatedResult),

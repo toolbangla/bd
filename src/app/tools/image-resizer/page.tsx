@@ -103,6 +103,7 @@ export default function ImageResizerPage() {
           setResizedUrl(url);
           setIsResizing(false);
           void recordToolHistory({
+            tool_id: "image-resizer",
             tool_name: "Image Resizer",
             input: `${file.name}, ${originalWidth} × ${originalHeight}px`,
             output: `${newWidth} × ${newHeight}px`,

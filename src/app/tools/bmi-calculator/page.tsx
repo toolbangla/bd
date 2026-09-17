@@ -45,6 +45,7 @@ export default function BMICalculatorPage() {
     }
 
     void recordToolHistory({
+      tool_id: "bmi-calculator",
       tool_name: "BMI Calculator",
       input: `Height: ${height} cm, Weight: ${weight} kg`,
       output: `BMI: ${bmi.toFixed(1)}`,

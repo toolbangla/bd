@@ -61,6 +61,7 @@ export default function ImageCompressorPage() {
           setIsCompressing(false);
 
           void recordToolHistory({
+            tool_id: "image-compressor",
             tool_name: "Image Compressor",
             input: `${file.name}, ${formatSize(file.size)}, quality ${quality}%`,
             output: `Compressed size: ${formatSize(blob.size)}`,
