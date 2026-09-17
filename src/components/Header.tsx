@@ -43,7 +43,9 @@ export default function Header() {
     if (label === "Products") return false;
     if (href === "/") return pathname === "/";
     if (label === "QR Code Generator") return pathname === href;
-    if (href === "/tools") return pathname === "/tools" || pathname.startsWith("/tools/") && !pathname.startsWith("/tools/qr-code-generator");
+    if (href === "/tools") {
+      return pathname === "/tools" || (pathname.startsWith("/tools/") && !pathname.startsWith("/tools/qr-code-generator"));
+    }
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
@@ -68,10 +70,10 @@ export default function Header() {
               key={`${item.href}-${item.label}`}
               href={item.href}
               aria-current={isActive(item.href, item.label) ? "page" : undefined}
-              className={`rounded-lg border px-2 py-1 font-medium transition hover:text-blue-600 ${
+              className={`rounded-lg border px-3 py-2 font-medium transition ${
                 isActive(item.href, item.label)
                   ? "border-red-500 bg-red-50 text-red-700"
-                  : "border-transparent text-slate-700"
+                  : "border-transparent text-slate-700 hover:text-blue-600"
               }`}
             >
               {item.label}
@@ -101,10 +103,10 @@ export default function Header() {
                 href={item.href}
                 onClick={closeMenu}
                 aria-current={isActive(item.href, item.label) ? "page" : undefined}
-                className={`border px-3 py-3 font-medium transition ${
+                className={`rounded-lg border px-3 py-3 font-medium transition ${
                   isActive(item.href, item.label)
                     ? "border-red-500 bg-red-50 text-red-700"
-                    : "border-transparent text-slate-700"
+                    : "border-transparent text-slate-700 hover:text-blue-600"
                 }`}
               >
                 {item.label}
