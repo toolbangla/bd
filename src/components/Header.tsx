@@ -37,6 +37,7 @@ export default function Header() {
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/admin", label: "Admin Panel" },
+    { href: "/premium", label: "Premium" },
   ];
 
   const isActive = (href: string, label: string) => {
@@ -73,7 +74,9 @@ export default function Header() {
               className={`rounded-lg border px-3 py-2 font-medium transition ${
                 isActive(item.href, item.label)
                   ? "border-red-500 bg-red-50 text-red-700"
-                  : "border-transparent text-slate-700 hover:text-blue-600"
+                  : item.label === "Premium"
+                    ? "border-amber-200 bg-amber-50 text-amber-700 hover:border-amber-300"
+                    : "border-transparent text-slate-700 hover:text-blue-600"
               }`}
             >
               {item.label}
@@ -106,7 +109,9 @@ export default function Header() {
                 className={`rounded-lg border px-3 py-3 font-medium transition ${
                   isActive(item.href, item.label)
                     ? "border-red-500 bg-red-50 text-red-700"
-                    : "border-transparent text-slate-700 hover:text-blue-600"
+                    : item.label === "Premium"
+                      ? "border-amber-200 bg-amber-50 text-amber-700 hover:border-amber-300"
+                      : "border-transparent text-slate-700 hover:text-blue-600"
                 }`}
               >
                 {item.label}

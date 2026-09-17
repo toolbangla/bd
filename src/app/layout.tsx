@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: {
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | ToolBangla",
   },
   description:
-    "ToolBangla-তে Image, PDF, QR Code, Calculator এবং অন্যান্য দরকারি অনলাইন টুল সহজে ব্যবহার করুন।",
+    "ToolBangla-তে ছবি, PDF, QR Code, Calculator এবং অন্যান্য দরকারি অনলাইন টুল সহজে ব্যবহার করুন।",
   keywords: [
     "ToolBangla",
     "online tools",
@@ -25,12 +26,20 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "ToolBangla" }],
   creator: "ToolBangla",
-  metadataBase: new URL("http://localhost:3000"),
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: SITE_URL },
   openGraph: {
     title: "ToolBangla — সব দরকারি টুল এক জায়গায়",
-    description: "সহজ, দ্রুত এবং বিনামূল্যে অনলাইন টুল।",
+    description: "সহজ, দ্রুত এবং বিনামূল্যে বাংলা-কেন্দ্রিক অনলাইন টুল।",
+    url: SITE_URL,
     type: "website",
     siteName: "ToolBangla",
+    locale: "bn_BD",
+  },
+  twitter: {
+    card: "summary",
+    title: "ToolBangla — সব দরকারি টুল এক জায়গায়",
+    description: "সহজ, দ্রুত এবং বিনামূল্যে বাংলা-কেন্দ্রিক অনলাইন টুল।",
   },
   robots: {
     index: true,

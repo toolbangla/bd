@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import ToolLayout from "@/components/ToolLayout";
 import { ADMIN_EMAIL, isAdminEmail } from "@/lib/admin";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
+import { getToolHistory } from "@/lib/tool-history";
 
 type ContactMessage = {
   id: string;
@@ -43,13 +44,12 @@ export default function AdminPage() {
       return;
     }
 
-    const [messagesResult, settingsResult, historyResult] = await Promise.all([
+    const [messagesResult, settingsResult] = await Promise.all([
       supabase
         .from("contact_messages")
         .select("id, name, email, phone, subject, message, created_at, is_read")
         .order("created_at", { ascending: false }),
       supabase.from("site_settings").select("logo_url").eq("id", 1).maybeSingle(),
-      supabase.from("tool_history").select("id", { count: "exact", head: true }),
     ]);
 
     if (messagesResult.error) {
@@ -64,7 +64,7 @@ export default function AdminPage() {
       setLogoUrl(settingsResult.data?.logo_url ?? "");
     }
 
-    setHistoryCount(historyResult.count ?? null);
+    setHistoryCount((await getToolHistory()).length);
     setLoading(false);
   }, [router]);
 

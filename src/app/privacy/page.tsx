@@ -52,6 +52,25 @@ export default function PrivacyPage() {
             </p>
 
             <h2 className="mt-10 text-2xl font-bold">
+              Advertising and Google AdSense
+            </h2>
+
+            <p className="mt-3 leading-8 text-slate-600">
+              ToolBangla ভবিষ্যতে Google AdSense বা অনুরূপ advertising service
+              ব্যবহার করতে পারে। বিজ্ঞাপন চালু হলে Google এবং তার partners
+              cookies, web beacons বা অনুরূপ প্রযুক্তি ব্যবহার করে বিজ্ঞাপন
+              পরিবেশন ও পরিমাপ করতে পারে। বিজ্ঞাপনের ব্যক্তিগতকরণ এবং cookies
+              সম্পর্কে আপনার পছন্দ Google-এর বিজ্ঞাপন সেটিংস থেকে নিয়ন্ত্রণ
+              করা যেতে পারে।
+            </p>
+
+            <p className="mt-3 leading-8 text-slate-600">
+              বিজ্ঞাপন কখনোই গুরুত্বপূর্ণ form field, tool button বা download
+              control-এর উপর বসানো হবে না। বর্তমান AdSense configuration না
+              থাকলে এই website কোনো বিজ্ঞাপন script লোড করে না।
+            </p>
+
+            <h2 className="mt-10 text-2xl font-bold">
               নীতির পরিবর্তন
             </h2>
 

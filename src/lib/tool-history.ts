@@ -1,7 +1,3 @@
-import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
-
-export const HISTORY_STORAGE_KEY = "toolbangla-history";
-
 export type ToolHistoryRecord = {
   id: string;
   tool_name: string;
@@ -13,95 +9,41 @@ export type ToolHistoryRecord = {
 
 type NewHistoryRecord = Omit<ToolHistoryRecord, "id" | "created_at">;
 
-function getGuestHistory(): ToolHistoryRecord[] {
-  if (typeof window === "undefined") return [];
-
-  try {
-    return JSON.parse(localStorage.getItem(HISTORY_STORAGE_KEY) ?? "[]") as ToolHistoryRecord[];
-  } catch {
-    return [];
-  }
-}
+let sessionHistory: ToolHistoryRecord[] = [];
 
 function notifyHistoryChanged() {
+  if (typeof window === "undefined") return;
   window.dispatchEvent(new Event("tool-history-updated"));
 }
 
 export async function recordToolHistory(record: NewHistoryRecord) {
   if (typeof window === "undefined") return;
 
-  const supabase = getSupabaseBrowserClient();
-  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
-
-  if (user && supabase) {
-    const { tool_name, input, output } = record;
-    const { error } = await supabase.from("tool_history").insert({
-      user_id: user.id,
-      tool_name,
-      input,
-      output,
-    });
-
-    if (!error) notifyHistoryChanged();
-    return;
-  }
-
-  const history: ToolHistoryRecord[] = [
+  sessionHistory = [
     {
       ...record,
       id: crypto.randomUUID(),
       created_at: new Date().toISOString(),
     },
-    ...getGuestHistory(),
+    ...sessionHistory,
   ];
 
-  localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
   notifyHistoryChanged();
 }
 
 export async function getToolHistory() {
   if (typeof window === "undefined") return [];
-
-  const supabase = getSupabaseBrowserClient();
-  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
-
-  if (user && supabase) {
-    const { data, error } = await supabase
-      .from("tool_history")
-      .select("id, tool_name, input, output, created_at")
-      .order("created_at", { ascending: false });
-
-    if (!error) return (data ?? []) as ToolHistoryRecord[];
-  }
-
-  return getGuestHistory().sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-  );
+  return [...sessionHistory];
 }
 
 export async function deleteToolHistory(id: string) {
-  const supabase = getSupabaseBrowserClient();
-  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
-
-  if (user && supabase) {
-    await supabase.from("tool_history").delete().eq("id", id);
-  } else {
-    const updated = getGuestHistory().filter((record) => record.id !== id);
-    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(updated));
-  }
+  sessionHistory = sessionHistory.filter((record) => record.id !== id);
 
   notifyHistoryChanged();
 }
 
 export async function clearToolHistory() {
-  const supabase = getSupabaseBrowserClient();
-  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
-
-  if (user && supabase) {
-    await supabase.from("tool_history").delete().eq("user_id", user.id);
-  } else {
-    localStorage.removeItem(HISTORY_STORAGE_KEY);
-  }
+  sessionHistory = [];
 
   notifyHistoryChanged();
 }
@@ -112,15 +54,7 @@ export async function getToolHistoryForTool(toolName: string) {
 }
 
 export async function clearToolHistoryForTool(toolName: string) {
-  const supabase = getSupabaseBrowserClient();
-  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
-
-  if (user && supabase) {
-    await supabase.from("tool_history").delete().eq("user_id", user.id).eq("tool_name", toolName);
-  } else {
-    const updated = getGuestHistory().filter((record) => record.tool_name !== toolName);
-    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(updated));
-  }
+  sessionHistory = sessionHistory.filter((record) => record.tool_name !== toolName);
 
   notifyHistoryChanged();
 }
