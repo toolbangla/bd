@@ -232,7 +232,7 @@ export default function Header() {
             style={{
               color: categoriesActive ? "#ffffff" : "#0369a1",
               backgroundColor: categoriesActive ? "#0284c7" : "#f0f9ff",
-              borderColor: "#7dd3fc", position: "fixed",
+              borderColor: "#7dd3fc",
             }}
             aria-haspopup="menu"
             aria-expanded={categoriesOpen}
@@ -249,7 +249,8 @@ export default function Header() {
               style={{
                 color: isActive(item.href) ? "#ffffff" : item.text,
                 backgroundColor: isActive(item.href) ? item.color : item.bg,
-                borderColor: item.border,
+                borderColor: item.border, 
+                position: "fixed",
               }}
             >
               {item.label}
