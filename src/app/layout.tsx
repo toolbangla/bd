@@ -28,7 +28,9 @@ export const metadata: Metadata = {
   authors: [{ name: "ToolBangla" }],
   creator: "ToolBangla",
   metadataBase: new URL(SITE_URL),
-  alternates: { canonical: SITE_URL },
+  alternates: {
+    canonical: SITE_URL,
+  },
   openGraph: {
     title: "ToolBangla — সব দরকারি টুল এক জায়গায়",
     description: "সহজ, দ্রুত এবং বিনামূল্যে বাংলা-কেন্দ্রিক অনলাইন টুল।",
@@ -55,7 +57,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bn">
-      <body>{children}<VoiceAssistant /></body>
+      <body>
+        {children}
+        <VoiceAssistant />
+      </body>
     </html>
   );
 }
