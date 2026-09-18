@@ -6,9 +6,7 @@ export async function POST(request: Request) {
 
     if (!apiKey) {
       return NextResponse.json(
-        {
-          error: "Remove.bg API key is not configured.",
-        },
+        { error: "Remove.bg API key is not configured." },
         { status: 500 }
       );
     }
@@ -18,9 +16,14 @@ export async function POST(request: Request) {
 
     if (!(imageFile instanceof File)) {
       return NextResponse.json(
-        {
-          error: "Please upload an image.",
-        },
+        { error: "Please upload an image." },
+        { status: 400 }
+      );
+    }
+
+    if (!imageFile.type.startsWith("image/")) {
+      return NextResponse.json(
+        { error: "Please upload a valid image file." },
         { status: 400 }
       );
     }
@@ -44,10 +47,12 @@ export async function POST(request: Request) {
     if (!response.ok) {
       const errorText = await response.text();
 
+      console.error("Remove.bg API error:", errorText);
+
       return NextResponse.json(
         {
-          error: "Background removal failed.",
-          details: errorText,
+          error:
+            "Background removal failed. Please check your API key and image.",
         },
         { status: response.status }
       );
@@ -59,8 +64,6 @@ export async function POST(request: Request) {
       status: 200,
       headers: {
         "Content-Type": "image/png",
-        "Content-Disposition":
-          'attachment; filename="toolbangla-background-removed.png"',
         "Cache-Control": "no-store",
       },
     });

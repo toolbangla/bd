@@ -1,18 +1,1 @@
-import FileUtilityTool from "@/components/FileUtilityTool";
-
-export const metadata = {
-  title: "Background Remover",
-  description:
-    "ছবির ব্যাকগ্রাউন্ড সরিয়ে স্বচ্ছ PNG তৈরি করুন।",
-};
-
-export default function BackgroundRemoverPage() {
-  return (
-    <FileUtilityTool
-      title="Background Remover"
-      slug="background-remover"
-      mode="remove-bg"
-      description="ছবির ব্যাকগ্রাউন্ড সরিয়ে স্বচ্ছ PNG তৈরি করুন।"
-    />
-  );
-}
+import BackgroundRemoverTool from "@/components/background-remover/BackgroundRemoverTool"; export const metadata = { title: "Background Remover | ToolBangla", description: "AI-powered background remover দিয়ে ছবির background remove করে transparent PNG তৈরি করুন।", }; export default function BackgroundRemoverPage() { return <BackgroundRemoverTool />; }
