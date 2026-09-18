@@ -225,42 +225,27 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-1.5 md:flex">
-          <button
-            type="button"
-            onClick={() => setCategoriesOpen(!categoriesOpen)}
-            className="rounded-lg border px-3 py-2 text-sm font-semibold whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
-            style={{
-              color: categoriesActive ? "#ffffff" : "#0369a1",
-              backgroundColor: categoriesActive ? "#0284c7" : "#f0f9ff",
-              borderColor: "#7dd3fc",
-            }}
-            aria-haspopup="menu"
-            aria-expanded={categoriesOpen}
-          >
-            Categories
-          </button>
-
-          {navigation.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActive(item.href) ? "page" : undefined}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setCategoriesOpen(!categoriesOpen)}
               className="rounded-lg border px-3 py-2 text-sm font-semibold whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
               style={{
-                color: isActive(item.href) ? "#ffffff" : item.text,
-                backgroundColor: isActive(item.href) ? item.color : item.bg,
-                borderColor: item.border, 
-                position: "fixed",
+                color: categoriesActive ? "#ffffff" : "#0369a1",
+                backgroundColor: categoriesActive
+                  ? "#0284c7"
+                  : "#f0f9ff",
+                borderColor: "#7dd3fc",
               }}
+              aria-haspopup="menu"
+              aria-expanded={categoriesOpen}
             >
-              {item.label}
-            </Link>
-          ))}
+              Categories
+            </button>
 
-          <div className="relative">
             {categoriesOpen && (
               <div
-                className="absolute left-0 top-full z-[100] mt-2 w-[650px] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-slate-200 bg-white p-3 shadow-2xl"
+                className="absolute left-1/2 top-full z-[100] mt-2 w-[650px] max-w-[calc(100vw-1.5rem)] -translate-x-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white p-3 shadow-2xl"
                 role="menu"
               >
                 <div className="grid grid-cols-3 gap-3">
@@ -279,13 +264,13 @@ export default function Header() {
                         {category.name}
                       </div>
 
-                      <div className="space-y-0.5 p-1.5">
+                      <div className="space-y-0.5 bg-white p-1.5">
                         {category.tools.map((tool) => (
                           <Link
                             key={tool.href}
                             href={tool.href}
                             onClick={closeMenu}
-                            className="block rounded-md px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950"
+                            className="block rounded-md px-2.5 py-1.5 text-xs font-medium text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-100 hover:text-slate-950 hover:shadow-sm"
                             role="menuitem"
                           >
                             {tool.label}
@@ -298,6 +283,24 @@ export default function Header() {
               </div>
             )}
           </div>
+
+          {navigation.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={isActive(item.href) ? "page" : undefined}
+              className="rounded-lg border px-3 py-2 text-sm font-semibold whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+              style={{
+                color: isActive(item.href) ? "#ffffff" : item.text,
+                backgroundColor: isActive(item.href)
+                  ? item.color
+                  : item.bg,
+                borderColor: item.border,
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <button
@@ -306,7 +309,7 @@ export default function Header() {
             setMenuOpen(!menuOpen);
             setCategoriesOpen(false);
           }}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xl text-slate-700 md:hidden"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xl text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm md:hidden"
           aria-label="Menu"
           aria-expanded={menuOpen}
         >
@@ -320,15 +323,18 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setCategoriesOpen(!categoriesOpen)}
-              className="flex w-full items-center justify-between rounded-lg border px-3 py-2.5 text-sm font-semibold"
+              className="flex w-full items-center justify-between rounded-lg border px-3 py-2.5 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
               style={{
                 color: categoriesActive ? "#ffffff" : "#0369a1",
-                backgroundColor: categoriesActive ? "#0284c7" : "#f0f9ff",
+                backgroundColor: categoriesActive
+                  ? "#0284c7"
+                  : "#f0f9ff",
                 borderColor: "#7dd3fc",
               }}
               aria-expanded={categoriesOpen}
             >
               <span>Categories</span>
+
               <span
                 className={`text-xs transition-transform duration-200 ${
                   categoriesOpen ? "rotate-180" : ""
@@ -361,7 +367,7 @@ export default function Header() {
                           key={tool.href}
                           href={tool.href}
                           onClick={closeMenu}
-                          className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                          className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-blue-600 hover:shadow-sm"
                         >
                           {tool.label}
                         </Link>
@@ -378,10 +384,12 @@ export default function Header() {
                 href={item.href}
                 onClick={closeMenu}
                 aria-current={isActive(item.href) ? "page" : undefined}
-                className="rounded-lg border px-3 py-2.5 text-sm font-semibold transition"
+                className="rounded-lg border px-3 py-2.5 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
                 style={{
                   color: isActive(item.href) ? "#ffffff" : item.text,
-                  backgroundColor: isActive(item.href) ? item.color : item.bg,
+                  backgroundColor: isActive(item.href)
+                    ? item.color
+                    : item.bg,
                   borderColor: item.border,
                 }}
               >
