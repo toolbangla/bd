@@ -33,20 +33,53 @@ export default function Header() {
   };
 
   const navigation = [
-    { href: "/", label: "Home" },
-    { href: "/tools", label: "Tools" },
-    { href: "/tools", label: "Products" },
-    { href: "/tools/qr-code-generator", label: "QR Code Generator" },
-    { href: "/tools/text-to-voice", label: "Text to Voice" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-    { href: "/admin", label: "Admin Panel" },
-    { href: "/premium", label: "Premium" },
+    {
+      href: "/",
+      label: "Home",
+      color: "#2563eb",
+      bg: "#eff6ff",
+      border: "#93c5fd",
+      text: "#1d4ed8",
+    },
+    {
+      href: "/about",
+      label: "About",
+      color: "#7c3aed",
+      bg: "#f5f3ff",
+      border: "#c4b5fd",
+      text: "#6d28d9",
+    },
+    {
+      href: "/contact",
+      label: "Contact",
+      color: "#0891b2",
+      bg: "#ecfeff",
+      border: "#67e8f9",
+      text: "#0e7490",
+    },
+    {
+      href: "/admin",
+      label: "Admin",
+      color: "#db2777",
+      bg: "#fdf2f8",
+      border: "#f9a8d4",
+      text: "#be185d",
+    },
+    {
+      href: "/premium",
+      label: "Premium",
+      color: "#d97706",
+      bg: "#fffbeb",
+      border: "#fcd34d",
+      text: "#b45309",
+    },
   ];
 
   const categories = [
     {
       name: "Image Tools",
+      color: "#2563eb",
+      bg: "#eff6ff",
       tools: [
         { label: "JPG → PNG", href: "/tools/jpg-to-png" },
         { label: "PNG → JPG", href: "/tools/png-to-jpg" },
@@ -60,6 +93,8 @@ export default function Header() {
     },
     {
       name: "PDF Tools",
+      color: "#dc2626",
+      bg: "#fef2f2",
       tools: [
         { label: "PDF → JPG", href: "/tools/pdf-to-jpg" },
         { label: "PDF → Image", href: "/tools/pdf-to-image" },
@@ -71,6 +106,8 @@ export default function Header() {
     },
     {
       name: "Calculator",
+      color: "#16a34a",
+      bg: "#f0fdf4",
       tools: [
         {
           label: "Percentage Calculator",
@@ -91,6 +128,8 @@ export default function Header() {
     },
     {
       name: "Social Media Tools",
+      color: "#db2777",
+      bg: "#fdf2f8",
       tools: [
         {
           label: "Facebook Cover Size",
@@ -116,6 +155,8 @@ export default function Header() {
     },
     {
       name: "QR Code",
+      color: "#9333ea",
+      bg: "#faf5ff",
       tools: [
         {
           label: "QR Code Generator",
@@ -125,6 +166,8 @@ export default function Header() {
     },
     {
       name: "Bangla Tools",
+      color: "#ea580c",
+      bg: "#fff7ed",
       tools: [
         {
           label: "বাংলা → English Text Helper",
@@ -146,6 +189,8 @@ export default function Header() {
     },
     {
       name: "Unit Converter",
+      color: "#0f766e",
+      bg: "#f0fdfa",
       tools: [
         {
           label: "Unit Converter",
@@ -155,23 +200,9 @@ export default function Header() {
     },
   ];
 
-  const isActive = (href: string, label: string) => {
-    if (label === "Products") return false;
-
+  const isActive = (href: string) => {
     if (href === "/") {
       return pathname === "/";
-    }
-
-    if (label === "QR Code Generator") {
-      return pathname === href;
-    }
-
-    if (href === "/tools") {
-      return (
-        pathname === "/tools" ||
-        (pathname.startsWith("/tools/") &&
-          !pathname.startsWith("/tools/qr-code-generator"))
-      );
     }
 
     return pathname === href || pathname.startsWith(`${href}/`);
@@ -181,120 +212,130 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-3 sm:px-5 lg:px-6">
         <Link
           href="/"
           onClick={closeMenu}
-          className="flex min-w-0 items-center gap-3 text-2xl font-extrabold tracking-tight text-slate-900"
+          className="flex shrink-0 items-center gap-2"
           aria-label="ToolBangla home"
         >
           {logoUrl && (
             <img
               src={logoUrl}
               alt=""
-              className="h-10 w-auto max-w-[9rem] object-contain"
+              className="h-8 w-auto max-w-[80px] object-contain"
             />
           )}
 
-          <span className="whitespace-nowrap">
+          <span className="whitespace-nowrap text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">
             Tool<span className="text-blue-600">Bangla</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
-          {navigation.map((item) => (
-            <Link
-              key={`${item.href}-${item.label}`}
-              href={item.href}
-              aria-current={
-                isActive(item.href, item.label) ? "page" : undefined
-              }
-              className={`rounded-lg border px-3 py-2 font-medium transition ${
-                isActive(item.href, item.label)
-                  ? "border-red-500 bg-red-50 text-red-700"
-                  : item.label === "Premium"
-                    ? "border-amber-200 bg-amber-50 text-amber-700 hover:border-amber-300"
-                    : "border-transparent text-slate-700 hover:text-blue-600"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-
-          <div className="relative">
-            <div className="flex items-stretch">
-              <button
-                type="button"
-                onClick={() => setCategoriesOpen(!categoriesOpen)}
-                className={`rounded-l-lg border px-3 py-2 font-medium transition ${
-                  categoriesActive
-                    ? "border-red-500 bg-red-50 text-red-700"
-                    : "border-slate-200 bg-white text-slate-700 hover:text-blue-600"
-                }`}
-                aria-haspopup="menu"
-                aria-expanded={categoriesOpen}
+        <nav className="hidden items-center gap-1.5 md:flex">
+          <div className="flex items-center gap-1.5">
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className="rounded-lg border px-3 py-2 text-sm font-semibold whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+                style={{
+                  color: isActive(item.href) ? "#ffffff" : item.text,
+                  backgroundColor: isActive(item.href)
+                    ? item.color
+                    : item.bg,
+                  borderColor: item.border,
+                }}
               >
-                Categories
-              </button>
+                {item.label}
+              </Link>
+            ))}
 
-              <button
-                type="button"
-                onClick={() => setCategoriesOpen(!categoriesOpen)}
-                className={`rounded-r-lg border-y border-r px-2.5 py-2 transition ${
-                  categoriesActive
-                    ? "border-red-500 bg-red-50 text-red-700"
-                    : "border-slate-200 bg-white text-slate-700 hover:text-blue-600"
-                }`}
-                aria-label="Open Categories menu"
-                aria-haspopup="menu"
-                aria-expanded={categoriesOpen}
-              >
-                <span
-                  className={`inline-block text-xs transition-transform duration-200 ${
-                    categoriesOpen ? "rotate-180" : ""
-                  }`}
+            <div className="relative">
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setCategoriesOpen(!categoriesOpen)}
+                  className="rounded-lg border px-3 py-2 text-sm font-semibold whitespace-nowrap transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+                  style={{
+                    color: categoriesActive ? "#ffffff" : "#0369a1",
+                    backgroundColor: categoriesActive
+                      ? "#0284c7"
+                      : "#f0f9ff",
+                    borderColor: "#7dd3fc",
+                  }}
+                  aria-haspopup="menu"
+                  aria-expanded={categoriesOpen}
                 >
-                  ▼
-                </span>
-              </button>
-            </div>
+                  Categories
+                </button>
 
-            {categoriesOpen && (
-              <div
-                className="absolute right-0 top-full z-[100] mt-2 max-h-[75vh] w-[720px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-xl"
-                role="menu"
-              >
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {categories.map((category) => (
-                    <div key={category.name}>
-                      <div className="mb-2 border-b border-slate-200 pb-2">
-                        <h3 className="text-sm font-bold text-slate-900">
-                          {category.name}
-                        </h3>
-                      </div>
-
-                      <div className="space-y-1">
-                        {category.tools.map((tool) => (
-                          <Link
-                            key={tool.href}
-                            href={tool.href}
-                            onClick={closeMenu}
-                            className={`block rounded-md px-3 py-2 text-sm font-medium transition ${
-                              pathname === tool.href
-                                ? "bg-red-50 text-red-700"
-                                : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
-                            }`}
-                            role="menuitem"
-                          >
-                            {tool.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setCategoriesOpen(!categoriesOpen)}
+                  className="ml-1 flex h-[36px] w-[30px] items-center justify-center rounded-lg border text-sm transition-all duration-200 hover:shadow-sm"
+                  style={{
+                    color: categoriesOpen ? "#ffffff" : "#0369a1",
+                    backgroundColor: categoriesOpen
+                      ? "#0284c7"
+                      : "#f0f9ff",
+                    borderColor: "#7dd3fc",
+                  }}
+                  aria-label="Open Categories menu"
+                  aria-haspopup="menu"
+                  aria-expanded={categoriesOpen}
+                >
+                  <span
+                    className={`inline-block text-xs transition-transform duration-200 ${
+                      categoriesOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    ▼
+                  </span>
+                </button>
               </div>
-            )}
+
+              {categoriesOpen && (
+                <div
+                  className="absolute right-0 top-full z-[100] mt-2 w-[650px] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-slate-200 bg-white p-3 shadow-2xl"
+                  role="menu"
+                >
+                  <div className="grid grid-cols-3 gap-3">
+                    {categories.map((category) => (
+                      <div
+                        key={category.name}
+                        className="overflow-hidden rounded-lg border border-slate-100"
+                      >
+                        <div
+                          className="px-3 py-2 text-xs font-bold"
+                          style={{
+                            color: category.color,
+                            backgroundColor: category.bg,
+                          }}
+                        >
+                          {category.name}
+                        </div>
+
+                        <div className="space-y-0.5 p-1.5">
+                          {category.tools.map((tool) => (
+                            <Link
+                              key={tool.href}
+                              href={tool.href}
+                              onClick={closeMenu}
+                              className="block rounded-md px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950"
+                              role="menuitem"
+                            >
+                              {tool.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </nav>
 
@@ -304,7 +345,7 @@ export default function Header() {
             setMenuOpen(!menuOpen);
             setCategoriesOpen(false);
           }}
-          className="rounded-lg border border-slate-200 px-3 py-2 text-xl md:hidden"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xl text-slate-700 md:hidden"
           aria-label="Menu"
           aria-expanded={menuOpen}
         >
@@ -314,81 +355,82 @@ export default function Header() {
 
       {menuOpen && (
         <div className="border-t border-slate-200 bg-white md:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col px-4 py-4 sm:px-6">
+          <nav className="mx-auto flex max-w-7xl flex-col gap-1.5 px-3 py-3">
             {navigation.map((item) => (
               <Link
-                key={`${item.href}-${item.label}`}
+                key={item.href}
                 href={item.href}
                 onClick={closeMenu}
-                aria-current={
-                  isActive(item.href, item.label) ? "page" : undefined
-                }
-                className={`rounded-lg border px-3 py-3 font-medium transition ${
-                  isActive(item.href, item.label)
-                    ? "border-red-500 bg-red-50 text-red-700"
-                    : item.label === "Premium"
-                      ? "border-amber-200 bg-amber-50 text-amber-700"
-                      : "border-transparent text-slate-700 hover:text-blue-600"
-                }`}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className="rounded-lg border px-3 py-2.5 text-sm font-semibold transition"
+                style={{
+                  color: isActive(item.href) ? "#ffffff" : item.text,
+                  backgroundColor: isActive(item.href)
+                    ? item.color
+                    : item.bg,
+                  borderColor: item.border,
+                }}
               >
                 {item.label}
               </Link>
             ))}
 
-            <div className="mt-1">
-              <button
-                type="button"
-                onClick={() => setCategoriesOpen(!categoriesOpen)}
-                className={`flex w-full items-center justify-between rounded-lg border px-3 py-3 font-medium transition ${
-                  categoriesActive
-                    ? "border-red-500 bg-red-50 text-red-700"
-                    : "border-slate-200 text-slate-700 hover:text-blue-600"
+            <button
+              type="button"
+              onClick={() => setCategoriesOpen(!categoriesOpen)}
+              className="flex w-full items-center justify-between rounded-lg border px-3 py-2.5 text-sm font-semibold"
+              style={{
+                color: categoriesActive ? "#ffffff" : "#0369a1",
+                backgroundColor: categoriesActive
+                  ? "#0284c7"
+                  : "#f0f9ff",
+                borderColor: "#7dd3fc",
+              }}
+              aria-expanded={categoriesOpen}
+            >
+              <span>Categories</span>
+              <span
+                className={`text-xs transition-transform duration-200 ${
+                  categoriesOpen ? "rotate-180" : ""
                 }`}
-                aria-expanded={categoriesOpen}
               >
-                <span>Categories</span>
+                ▼
+              </span>
+            </button>
 
-                <span
-                  className={`text-xs transition-transform duration-200 ${
-                    categoriesOpen ? "rotate-180" : ""
-                  }`}
-                >
-                  ▼
-                </span>
-              </button>
-
-              {categoriesOpen && (
-                <div className="mt-2 max-h-[65vh] overflow-y-auto rounded-lg border border-slate-200 bg-slate-50 p-3">
-                  {categories.map((category) => (
+            {categoriesOpen && (
+              <div className="max-h-[60vh] overflow-y-auto rounded-lg border border-slate-200 bg-slate-50 p-2">
+                {categories.map((category) => (
+                  <div
+                    key={category.name}
+                    className="mb-2 overflow-hidden rounded-lg border border-slate-200 last:mb-0"
+                  >
                     <div
-                      key={category.name}
-                      className="mb-4 last:mb-0"
+                      className="px-3 py-2 text-sm font-bold"
+                      style={{
+                        color: category.color,
+                        backgroundColor: category.bg,
+                      }}
                     >
-                      <h3 className="mb-1 border-b border-slate-200 px-2 pb-2 text-sm font-bold text-slate-900">
-                        {category.name}
-                      </h3>
-
-                      <div>
-                        {category.tools.map((tool) => (
-                          <Link
-                            key={tool.href}
-                            href={tool.href}
-                            onClick={closeMenu}
-                            className={`block rounded-md px-3 py-2 text-sm font-medium transition ${
-                              pathname === tool.href
-                                ? "bg-red-50 text-red-700"
-                                : "text-slate-700 hover:bg-white hover:text-blue-600"
-                            }`}
-                          >
-                            {tool.label}
-                          </Link>
-                        ))}
-                      </div>
+                      {category.name}
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+
+                    <div className="grid grid-cols-1 gap-0.5 bg-white p-1">
+                      {category.tools.map((tool) => (
+                        <Link
+                          key={tool.href}
+                          href={tool.href}
+                          onClick={closeMenu}
+                          className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                        >
+                          {tool.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </nav>
         </div>
       )}
